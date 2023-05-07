@@ -1,10 +1,44 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from "../components/layout/Header";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const Checkout = () => {
+    const [submitting, setSubmitting] = useState(false);
     const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
     const totalAmount = localStorage.getItem('totalAmount');
     const startTime = localStorage.getItem('StartTime');
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+    useEffect(() => {
+        if(token == null) {
+            navigate("/login");
+        }
+    }, [])
+    const config = {
+        headers: {
+            authorization: "Bearer " + localStorage.getItem("token")
+        }
+    };
+    const seatId = selectedSeats.map(obj => obj.id);
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (submitting) return; // Prevent double submission
+
+        setSubmitting(true); // Disable submit button
+        const data = {
+            seatId: seatId,
+            scheduleId: selectedSeats[0].scheduleId,
+            total: totalAmount,
+        };
+        axios.post("https://localhost:7228/DMP/Booking", data, config)
+            .then(res => {
+                navigate("/");
+            })
+            .finally(() => {
+                setSubmitting(false); // Re-enable submit button
+            });
+    }
     return (
         <div className="bg-[#001232] text-white">
             <Header></Header>
@@ -52,7 +86,13 @@ const Checkout = () => {
                         <div className="items-center text-center text-xl font-bold">{parseInt(totalAmount).toLocaleString()}đ</div>
                     </div>
                     <div className="pt-5 pb-2">
-                        <div className="text-center p-3 bg-red-500 rounded-lg text-lg">Tiếp tục</div>
+                        <button
+                            className="text-center p-3 bg-red-500 rounded-lg text-lg"
+                            disabled={submitting}
+                            onClick={handleSubmit}
+                        >
+                            Tiếp tục
+                        </button>
                     </div>
                 </div>
             </div>

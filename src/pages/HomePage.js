@@ -4,7 +4,10 @@ import Slider from "../components/layout/Slider";
 import SliderCard from "../components/layout/SliderCard";
 
 const HomePage = () => {
-    localStorage.clear();
+    localStorage.removeItem("filmName");
+    localStorage.removeItem('selectedSeats');
+    localStorage.removeItem('totalAmount');
+    localStorage.removeItem('StartTime')
     return (
         <div>
             <Header></Header>

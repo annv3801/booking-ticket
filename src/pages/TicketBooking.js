@@ -1,9 +1,21 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import {NavLink, useParams} from "react-router-dom";
+import {NavLink, useNavigate, useParams} from "react-router-dom";
 import Header from "../components/layout/Header";
 
 const Seat = ({ seat, onSeatSelect, selectedSeats, className }) => {
+    const navigate = useNavigate();
+    const token = localStorage.getItem("token");
+    useEffect(() => {
+        if(token == null) {
+            navigate("/login");
+        }
+    }, [])
+    const config = {
+        headers: {
+            authorization: "Bearer " + localStorage.getItem("token")
+        }
+    };
     const handleClick = () => {
         if (seat.status) {
             onSeatSelect(seat);
@@ -77,13 +89,17 @@ const SeatMap = () => {
     }, [tickets]);
 
     const handleSeatSelect = selectedSeat => {
+        const differentTypeSelected = selectedSeats.some(seat => seat.type !== selectedSeat.type);
+        if (differentTypeSelected) {
+            return alert("Bạn chỉ có thể chọn ghế cùng loại");
+        }
+
         const seatIndex = selectedSeats.findIndex(seat => seat.id === selectedSeat.id);
         if (seatIndex !== -1) {
             const newSelectedSeats = [...selectedSeats];
             newSelectedSeats.splice(seatIndex, 1);
             setSelectedSeats(newSelectedSeats);
         } else {
-            // Map ticket type to seat price
             const ticket = tickets.find(ticket => ticket.type === selectedSeat.type);
             const price = ticket ? ticket.price : 0;
             setSelectedSeats([...selectedSeats, {...selectedSeat, price}]);
@@ -112,7 +128,11 @@ const SeatMap = () => {
         }
         return parseInt(aNameParts.slice(1).join('')) - parseInt(bNameParts.slice(1).join(''));
     });
-
+    const seatColors = {
+        1: "bg-green-300",
+        2: "bg-orange-500",
+        3: "bg-pink-500"
+    };
     const handleClick = () => {
         localStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
         localStorage.setItem('totalAmount', totalAmount);
@@ -141,39 +161,15 @@ const SeatMap = () => {
                             <div className="text-xl font-semibold mt-[5px] mr-4">{groupName}</div>
                             <div className="flex gap-4 mx-auto text-black" key={groupName}>
                                 {groupSeats.map(seat => {
-                                    if (seat.type === 1) {
-                                        return (
-                                            <Seat
-                                                className="bg-amber-500"
-                                                key={seat.id}
-                                                seat={seat}
-                                                onSeatSelect={handleSeatSelect}
-                                                selectedSeats={selectedSeats}
-                                            />
-                                        );
-                                    }
-                                    else if(seat.type === 2) {
-                                        return (
-                                            <Seat
-                                                className="bg-blue-300"
-                                                key={seat.id}
-                                                seat={seat}
-                                                onSeatSelect={handleSeatSelect}
-                                                selectedSeats={selectedSeats}
-                                            />
-                                        );
-                                    }
-                                    else {
-                                        return (
-                                            <Seat
-                                                className="bg-red-500"
-                                                key={seat.id}
-                                                seat={seat}
-                                                onSeatSelect={handleSeatSelect}
-                                                selectedSeats={selectedSeats}
-                                            />
-                                        );
-                                    }
+                                    return (
+                                        <Seat
+                                            className={seatColors[seat.type]}
+                                            key={seat.id}
+                                            seat={seat}
+                                            onSeatSelect={handleSeatSelect}
+                                            selectedSeats={selectedSeats}
+                                        />
+                                    );
                                 })}
                             </div>
                         </div>

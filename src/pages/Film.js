@@ -53,8 +53,10 @@ const HomePage = () => {
         const formattedDate = { day: day, month: month, name: dayName };
         dates.push(formattedDate);
     }
-    localStorage.clear();
     localStorage.setItem('filmName', data?.data.name);
+    localStorage.removeItem('selectedSeats');
+    localStorage.removeItem('totalAmount');
+    localStorage.removeItem('StartTime')
     return (
         <div>
             <Header></Header>
@@ -69,7 +71,7 @@ const HomePage = () => {
                     <div className="text-white pt-5 flex gap-5">
                         <img
                             className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
-                            src="https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202304/11106_103_100003.jpg"
+                            src={`https://localhost:7228/resources/${data?.data.image}`}
                             alt=""
                         />
                         <div className="w-full">

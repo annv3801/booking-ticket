@@ -1,0 +1,25 @@
+.input {
+    height: 100%;
+    width: 100%;
+    padding: 10px 60px 10px 20px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    color: var(--txt-color);
+    background-color: var(--main-bg);
+    box-shadow: var(--box-shadow);
+}
+select option {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--txt-color);
+    background-color: var(--main-bg);
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}

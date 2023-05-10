@@ -5,6 +5,10 @@ import axios from "axios";
 
 const Checkout = () => {
     const [submitting, setSubmitting] = useState(false);
+    const [couponValue, setCouponValue] = useState(0);
+    const [coupon, setCoupon] = useState(0);
+    const [couponCode, setCouponCode] = useState("");
+
     const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
     const totalAmount = localStorage.getItem('totalAmount');
     const startTime = localStorage.getItem('StartTime');
@@ -39,6 +43,21 @@ const Checkout = () => {
                 setSubmitting(false); // Re-enable submit button
             });
     }
+    const handleSubmitCoupon = (e) => {
+        e.preventDefault();
+        if (submitting) return; // Prevent double submission
+
+        setSubmitting(true); // Disable submit button
+
+        axios.get(`https://localhost:7228/DMP/CouponByCode/${couponCode}`, config)
+            .then(res => {
+                setCouponValue(res?.data.data.value)
+                setCoupon(res?.data.data)
+            })
+            .finally(() => {
+                setSubmitting(false); // Re-enable submit button
+            });
+    }
     return (
         <div className="bg-[#001232] text-white">
             <Header></Header>
@@ -48,8 +67,9 @@ const Checkout = () => {
                         <div>
                             <div className="font-bold text-2xl border-b-[1px] border-dashed pb-3 border-[#11326f] mb-5">Mã giảm giá</div>
                             <div className="flex justify-between">
-                                <input type="text" placeholder="Mã giảm giá" className="bg-[#032055] border-b-[1px] border-0 border-[#11326f] w-5/6"/>
-                                <button className="bg-green-500 p-2 rounded-3xl px-5">Áp dụng</button>
+                                <input type="text" placeholder="Mã giảm giá" className="bg-[#032055] border-b-[1px] border-0 border-[#11326f] w-5/6" value={couponCode}
+                                       onChange={(e) => setCouponCode(e.target.value)}/>
+                                <button className="bg-green-500 p-2 rounded-3xl px-5" onClick={handleSubmitCoupon}>Áp dụng</button>
                             </div>
                         </div>
                     </div>
@@ -84,6 +104,14 @@ const Checkout = () => {
                     <div className="flex gap-2 pb-5 pt-5 justify-between border-b-[1px] border-dashed pb-3 border-[#11326f]">
                         <div className="font-bold text-xl">Tổng tiền:</div>
                         <div className="items-center text-center text-xl font-bold">{parseInt(totalAmount).toLocaleString()}đ</div>
+                    </div>
+                    <div className="flex gap-2 pb-5 pt-5 justify-between border-b-[1px] border-dashed pb-3 border-[#11326f]">
+                        <div className="font-bold text-xl">Giảm giá:</div>
+                        <div className="items-center text-center text-xl font-bold">{parseInt(couponValue).toLocaleString()}đ</div>
+                    </div>
+                    <div className="flex gap-2 pb-5 pt-5 justify-between border-b-[1px] border-dashed pb-3 border-[#11326f]">
+                        <div className="font-bold text-xl">Tổng giá:</div>
+                        <div className="items-center text-center text-xl font-bold">{parseInt(totalAmount - couponValue).toLocaleString()}đ</div>
                     </div>
                     <div className="pt-5 pb-2">
                         <button

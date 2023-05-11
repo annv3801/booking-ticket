@@ -79,9 +79,9 @@ const Header = () => {
                         {category.data?.result?.map((categories) => {
                             return (
                                 <li>
-                                    <a href="#"
+                                    <NavLink to={`/category/${categories.shortenUrl}`}
                                        className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-white md:p-0 md:dark:text-blue-500 capitalize "
-                                       aria-current="page">{categories.name}</a>
+                                       aria-current="page">{categories.name}</NavLink>
                                 </li>
                             );
                         })}

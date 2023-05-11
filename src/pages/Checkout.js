@@ -8,6 +8,8 @@ const Checkout = () => {
     const [couponValue, setCouponValue] = useState(0);
     const [coupon, setCoupon] = useState(0);
     const [couponCode, setCouponCode] = useState("");
+    const [isCouponCodeValid, setIsCouponCodeValid] = useState(true);
+    const [paymentOption, setPaymentOption] = useState(1);
 
     const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
     const totalAmount = localStorage.getItem('totalAmount');
@@ -24,6 +26,9 @@ const Checkout = () => {
             authorization: "Bearer " + localStorage.getItem("token")
         }
     };
+    const handlePaymentOptionChange = (event) => {
+        setPaymentOption(event.target.value);
+    };
     const seatId = selectedSeats.map(obj => obj.id);
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -33,7 +38,11 @@ const Checkout = () => {
         const data = {
             seatId: seatId,
             scheduleId: selectedSeats[0].scheduleId,
-            total: totalAmount,
+            totalBeforeDiscount: totalAmount,
+            paymentMethod: paymentOption,
+            couponId: coupon != "" ? coupon.id : "",
+            discount: couponValue,
+            total: totalAmount - couponValue
         };
         axios.post("https://localhost:7228/DMP/Booking", data, config)
             .then(res => {
@@ -51,8 +60,13 @@ const Checkout = () => {
 
         axios.get(`https://localhost:7228/DMP/CouponByCode/${couponCode}`, config)
             .then(res => {
-                setCouponValue(res?.data.data.value)
-                setCoupon(res?.data.data)
+                if (res.status === 202) {
+                    setCouponValue(0);
+                    setIsCouponCodeValid(false);
+                } else {
+                    setCouponValue(res?.data.data.value);
+                    setCoupon(res?.data.data);
+                }
             })
             .finally(() => {
                 setSubmitting(false); // Re-enable submit button
@@ -68,20 +82,28 @@ const Checkout = () => {
                             <div className="font-bold text-2xl border-b-[1px] border-dashed pb-3 border-[#11326f] mb-5">Mã giảm giá</div>
                             <div className="flex justify-between">
                                 <input type="text" placeholder="Mã giảm giá" className="bg-[#032055] border-b-[1px] border-0 border-[#11326f] w-5/6" value={couponCode}
-                                       onChange={(e) => setCouponCode(e.target.value)}/>
-                                <button className="bg-green-500 p-2 rounded-3xl px-5" onClick={handleSubmitCoupon}>Áp dụng</button>
+                                       onChange={(e) => {setCouponCode(e.target.value);setIsCouponCodeValid(true);}}/>
+                                <button className="bg-green-500 p-2 rounded-3xl px-5" onClick={handleSubmitCoupon} disabled={!couponCode}>Áp dụng</button>
                             </div>
                         </div>
+                        {!isCouponCodeValid && <div className="text-red-500 pt-5">Mã giảm giá không hợp lệ. Vui lòng thử lại.</div>}
                     </div>
                     <div className="bg-[#032055] p-5 rounded-lg mb-8">
                         <div>
                             <div className="font-bold text-2xl border-b-[1px] border-dashed pb-3 border-[#11326f] mb-5">Hình thức thanh toán</div>
-                            <div className="flex justify-between">
-                                <input type="text" placeholder="Mã giảm giá" className="bg-[#032055] border-b-[1px] border-0 border-[#11326f] w-5/6"/>
-                                <button className="bg-green-500 p-2 rounded-lg px-5">Áp dụng</button>
+                            <div className="flex gap-5 flex-col">
+                                <div>
+                                    <input type="radio" id="paymentOption1" name="paymentOption" value="1" onChange={handlePaymentOptionChange} checked/>
+                                    <label htmlFor="paymentOption1" className="px-2">Thanh toán trực tiếp</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="paymentOption2" name="paymentOption" value="2" onChange={handlePaymentOptionChange}/>
+                                    <label htmlFor="paymentOption2" className="px-2">Thanh toán online</label>
+                                </div>
                             </div>
                         </div>
                     </div>
+
                 </div>
                 <div className="w-1/3 bg-[#032055] p-5 rounded-lg h-full">
                     <div className="font-bold text-2xl text-center border-b-[1px] border-dashed pb-3 border-[#11326f]">Thông tin đặt vé</div>
@@ -101,16 +123,16 @@ const Checkout = () => {
                         <div className="font-bold text-lg">Ghế:</div>
                         <div className="items-center text-center text-lg">{selectedSeats.map((seat) => seat.name).sort().join(", ")}</div>
                     </div>
-                    <div className="flex gap-2 pb-5 pt-5 justify-between border-b-[1px] border-dashed pb-3 border-[#11326f]">
+                    <div className="flex gap-2 pb-2 pt-5 justify-between ">
+                        <div className="text-xl">Tổng tiền vé:</div>
+                        <div className="items-center text-center text-xl">{parseInt(totalAmount).toLocaleString()}đ</div>
+                    </div>
+                    <div className="flex gap-2 pb-2 pt-2 justify-between">
+                        <div className="text-xl">Giảm giá:</div>
+                        <div className="items-center text-center text-xl">{parseInt(couponValue).toLocaleString()}đ</div>
+                    </div>
+                    <div className="flex gap-2 pb-2 pt-2 justify-between">
                         <div className="font-bold text-xl">Tổng tiền:</div>
-                        <div className="items-center text-center text-xl font-bold">{parseInt(totalAmount).toLocaleString()}đ</div>
-                    </div>
-                    <div className="flex gap-2 pb-5 pt-5 justify-between border-b-[1px] border-dashed pb-3 border-[#11326f]">
-                        <div className="font-bold text-xl">Giảm giá:</div>
-                        <div className="items-center text-center text-xl font-bold">{parseInt(couponValue).toLocaleString()}đ</div>
-                    </div>
-                    <div className="flex gap-2 pb-5 pt-5 justify-between border-b-[1px] border-dashed pb-3 border-[#11326f]">
-                        <div className="font-bold text-xl">Tổng giá:</div>
                         <div className="items-center text-center text-xl font-bold">{parseInt(totalAmount - couponValue).toLocaleString()}đ</div>
                     </div>
                     <div className="pt-5 pb-2">

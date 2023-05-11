@@ -32,6 +32,7 @@ const HomePage = () => {
             .get(`${link}/DMP/FilmSchedulesByFilmId`, {
                 params: {
                     Date: dateString,
+                    FilmId: data?.data.id
                 },
             })
             .then((res) => {

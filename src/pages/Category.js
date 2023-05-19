@@ -26,7 +26,7 @@ const Category = () => {
                 setCategory(categoryResponse);
             });
     }, []);
-
+    console.log(category)
     const currentDate = new Date();
     const options = { timeZone: 'Asia/Ho_Chi_Minh' };
     const formatter = new Intl.DateTimeFormat('en-US', {
@@ -73,7 +73,10 @@ const Category = () => {
     }
     localStorage.removeItem('selectedSeats');
     localStorage.removeItem('totalAmount');
-    localStorage.removeItem('StartTime')
+    localStorage.removeItem('StartTime');
+    localStorage.removeItem('coupon');
+    localStorage.removeItem('paymentOption');
+    localStorage.removeItem('couponValue');
     return (
         <div>
             <Header></Header>

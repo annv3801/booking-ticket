@@ -8,6 +8,10 @@ const HomePage = () => {
     localStorage.removeItem('selectedSeats');
     localStorage.removeItem('totalAmount');
     localStorage.removeItem('StartTime')
+    localStorage.removeItem('coupon')
+    localStorage.removeItem('paymentOption')
+    localStorage.removeItem('couponValue')
+
     return (
         <div>
             <Header></Header>

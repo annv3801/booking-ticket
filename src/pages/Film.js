@@ -58,6 +58,9 @@ const HomePage = () => {
     localStorage.removeItem('selectedSeats');
     localStorage.removeItem('totalAmount');
     localStorage.removeItem('StartTime')
+    localStorage.removeItem('coupon')
+    localStorage.removeItem('paymentOption')
+    localStorage.removeItem('couponValue')
     return (
         <div>
             <Header></Header>
@@ -78,27 +81,27 @@ const HomePage = () => {
                         <div className="w-full">
                             <div className="text-2xl ">{data?.data.name}</div>
                             <div className="flex gap-1 mt-2">
-                                <div className="font-bold">Đạo diễn:</div>
+                                <div className="font-bold w-[100px]">Đạo diễn:</div>
                                 <div>{data?.data.director}</div>
                             </div>
                             <div className="flex gap-1 mt-2">
-                                <div className="font-bold">Diễn viên:</div>
+                                <div className="font-bold w-[100px]">Diễn viên:</div>
                                 <div>{data?.data.actor}</div>
                             </div>
                             <div className="flex gap-1 mt-2">
-                                <div className="font-bold">Thể loại:</div>
+                                <div className="font-bold w-[100px]">Thể loại:</div>
                                 <div>{data?.data.genre}</div>
                             </div>
                             <div className="flex gap-1 mt-2">
-                                <div className="font-bold">Khởi chiếu:</div>
+                                <div className="font-bold w-[100px]">Khởi chiếu:</div>
                                 <div>{data?.data.premiere}</div>
                             </div>
                             <div className="flex gap-1 mt-2">
-                                <div className="font-bold">Thời lượng:</div>
+                                <div className="font-bold w-[100px]">Thời lượng:</div>
                                 <div>{data?.data.duration} phút</div>
                             </div>
                             <div className="flex gap-1 mt-2">
-                                <div className="font-bold">Ngôn ngữ:</div>
+                                <div className="font-bold w-[100px]">Ngôn ngữ:</div>
                                 <div>{data?.data.language}</div>
                             </div>
                             <button className="mt-3 p-3 bg-green-400 rounded-lg font-bold" onClick={() => setShowPopup(true)}>Mua Ngay</button>

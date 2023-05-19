@@ -9,8 +9,8 @@ const Checkout = () => {
     const [coupon, setCoupon] = useState(0);
     const [couponCode, setCouponCode] = useState("");
     const [isCouponCodeValid, setIsCouponCodeValid] = useState(true);
-    const [paymentOption, setPaymentOption] = useState(1);
-
+    const [paymentOption, setPaymentOption] = useState("1");
+    const [paymentUrl, setPaymentUrl] = useState('');
     const selectedSeats = JSON.parse(localStorage.getItem('selectedSeats'));
     const totalAmount = localStorage.getItem('totalAmount');
     const startTime = localStorage.getItem('StartTime');
@@ -26,9 +26,27 @@ const Checkout = () => {
             authorization: "Bearer " + localStorage.getItem("token")
         }
     };
+    useEffect(() => {
+        localStorage.setItem('paymentOption', paymentOption);
+    }, [paymentOption]);
     const handlePaymentOptionChange = (event) => {
         setPaymentOption(event.target.value);
+        const data = {
+            orderType: "other",
+            amount: parseInt(totalAmount),
+            orderDescription: "string",
+            name: "string"
+        }
+        if(event.target.value === '2') {
+            axios.post("https://localhost:7228/DMP/PaymentVnPay", data, config)
+                .then(res => {
+                    setPaymentUrl(res.data)
+                });
+        }
     };
+
+
+
     const seatId = selectedSeats.map(obj => obj.id);
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -66,6 +84,8 @@ const Checkout = () => {
                 } else {
                     setCouponValue(res?.data.data.value);
                     setCoupon(res?.data.data);
+                    localStorage.setItem('coupon', res?.data.data.id);
+                    localStorage.setItem('couponValue', res?.data.data.value);
                 }
             })
             .finally(() => {
@@ -93,12 +113,30 @@ const Checkout = () => {
                             <div className="font-bold text-2xl border-b-[1px] border-dashed pb-3 border-[#11326f] mb-5">Hình thức thanh toán</div>
                             <div className="flex gap-5 flex-col">
                                 <div>
-                                    <input type="radio" id="paymentOption1" name="paymentOption" value="1" onChange={handlePaymentOptionChange} checked/>
-                                    <label htmlFor="paymentOption1" className="px-2">Thanh toán trực tiếp</label>
-                                </div>
-                                <div>
-                                    <input type="radio" id="paymentOption2" name="paymentOption" value="2" onChange={handlePaymentOptionChange}/>
-                                    <label htmlFor="paymentOption2" className="px-2">Thanh toán online</label>
+                                    <input
+                                        type="radio"
+                                        id="paymentOption1"
+                                        name="paymentOption"
+                                        value="1"
+                                        onChange={handlePaymentOptionChange}
+                                        checked={paymentOption === "1"}
+                                    />
+                                    <label htmlFor="paymentOption1" className="px-2">
+                                        Thanh toán trực tiếp
+                                    </label>
+                                    <div>
+                                        <input
+                                            type="radio"
+                                            id="paymentOption2"
+                                            name="paymentOption"
+                                            value="2"
+                                            onChange={handlePaymentOptionChange}
+                                            checked={paymentOption === "2"}
+                                        />
+                                        <label htmlFor="paymentOption2" className="px-2">
+                                            Thanh toán online
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -136,13 +174,18 @@ const Checkout = () => {
                         <div className="items-center text-center text-xl font-bold">{parseInt(totalAmount - couponValue).toLocaleString()}đ</div>
                     </div>
                     <div className="pt-5 pb-2">
-                        <button
-                            className="text-center p-3 bg-red-500 rounded-lg text-lg"
-                            disabled={submitting}
-                            onClick={handleSubmit}
-                        >
-                            Tiếp tục
-                        </button>
+                        {paymentOption === '1' ? (
+                            <button
+                                className="text-center p-3 bg-red-500 rounded-lg text-lg"
+                                disabled={submitting}
+                                onClick={handleSubmit}
+                            >
+                                Tiếp tục
+                            </button>
+                        ) : (
+                            <a href={paymentUrl} className="text-center p-3 bg-red-500 rounded-lg text-lg">Tiếp tục</a>
+                        )}
+
                     </div>
                 </div>
             </div>

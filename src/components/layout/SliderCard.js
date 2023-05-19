@@ -95,7 +95,7 @@ const SliderCard = () => {
                                 <a href="#">
                                     <img
                                         className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
-                                        src="https://media.lottecinemavn.com/Media/MovieFile/MovieImg/202304/11106_103_100003.jpg"
+                                        src={`https://localhost:7228/resources/${seat.image}`}
                                         alt=""
                                     />
                                 </a>

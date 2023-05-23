@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {NavLink, useNavigate, useParams} from "react-router-dom";
 import Header from "../components/layout/Header";
+import Footer from "../components/layout/Footer";
 
 const Seat = ({ seat, onSeatSelect, selectedSeats, className }) => {
     const navigate = useNavigate();
@@ -47,7 +48,7 @@ const SeatMap = () => {
 
     useEffect(() => {
         axios
-            .get("https://localhost:7228/DMP/Ticket")
+            .get("http://localhost:5233/view-list-ticket")
             .then((res) => {
                 const listTicket = res.data.data.result;
                 setTickets(listTicket);
@@ -57,7 +58,7 @@ const SeatMap = () => {
     // Get list of seats
     useEffect(() => {
         axios
-            .get("https://localhost:7228/DMP/SeatBySchedule", {
+            .get("http://localhost:5233/view-list-seat-by-schedule", {
                 params: {
                     ScheduleId: id,
                 },
@@ -143,7 +144,7 @@ const SeatMap = () => {
         <div className="bg-[#001232] text-white">
             <Header></Header>
             {/*<img src="http://pixner.net/boleto/demo/assets/images/banner/banner04.jpg" alt="" className="h-[300px] w-full"/>*/}
-            <div className="text-white max-w-screen-xl mx-auto mt-5">
+            <div className="text-white max-w-screen-xl mx-auto mt-8">
                 <div className="flex gap-3 font-bold text-xl">
                     <div>{seats[0]?.theaterName}</div> |
                     <div>{seats[0]?.roomName}</div>
@@ -153,7 +154,8 @@ const SeatMap = () => {
                     <div>{new Date(seats[0]?.endTime).toLocaleDateString('en-GB')} {new Date(seats[0]?.endTime).toLocaleTimeString('en-GB', {hour12: false,})}</div>
                 </div>
             </div>
-            <img src="http://pixner.net/boleto/demo/assets/images/movie/screen-thumb.png" alt="" className="mx-auto my-16"/>
+            <h1 className="mx-auto text-3xl w-[400px] font-bold border-b-[1px] text-center pb-5 mt-5 before:border-t-[1px] before:w-[300px]">Màn Hình</h1>
+            <img src="http://pixner.net/boleto/demo/assets/images/movie/screen-thumb.png" alt="" className="mx-auto mt-10 mb-16"/>
             <div className="grid grid-cols-10 gap-4 max-w-screen-xl mx-auto mt-5">
                 {Object.entries(seatGroups).map(([groupName, groupSeats]) => (
                     <>
@@ -177,7 +179,7 @@ const SeatMap = () => {
                 ))}
 
             </div>
-            <div className="max-w-screen-xl mx-auto mt-5">
+            <div className="max-w-screen-xl mx-auto mt-5 pb-14">
                 <div className="mt-4 flex bg-blue-500 rounded-lg p-5 text-center items-center">
                     <div className="flex w-[500px]">
                         <div className="mr-1">Selected Seats: </div>
@@ -198,8 +200,8 @@ const SeatMap = () => {
                     <NavLink to={`/nextpage/`} onClick={() => handleClick()} className="bg-green-500 py-2 px-5 border-2 rounded-lg">Tiếp tục</NavLink>
                 </div>
             </div>
+            <Footer></Footer>
         </div>
-
     );
 }
 export default SeatMap;

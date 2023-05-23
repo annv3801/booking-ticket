@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Header from "../components/layout/Header";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
+import Footer from "../components/layout/Footer";
 
 const Checkout = () => {
     const [submitting, setSubmitting] = useState(false);
@@ -38,7 +39,7 @@ const Checkout = () => {
             name: "string"
         }
         if(event.target.value === '2') {
-            axios.post("https://localhost:7228/DMP/PaymentVnPay", data, config)
+            axios.post("http://localhost:5233/payment-vnpay", data, config)
                 .then(res => {
                     setPaymentUrl(res.data)
                 });
@@ -62,7 +63,7 @@ const Checkout = () => {
             discount: couponValue,
             total: totalAmount - couponValue
         };
-        axios.post("https://localhost:7228/DMP/Booking", data, config)
+        axios.post("http://localhost:5233/booking", data, config)
             .then(res => {
                 navigate("/");
             })
@@ -76,7 +77,7 @@ const Checkout = () => {
 
         setSubmitting(true); // Disable submit button
 
-        axios.get(`https://localhost:7228/DMP/CouponByCode/${couponCode}`, config)
+        axios.get(`http://localhost:5233/view-coupon-by-code/${couponCode}`, config)
             .then(res => {
                 if (res.status === 202) {
                     setCouponValue(0);
@@ -95,7 +96,7 @@ const Checkout = () => {
     return (
         <div className="bg-[#001232] text-white">
             <Header></Header>
-            <div className="max-w-screen-xl mx-auto flex gap-10 py-5">
+            <div className="max-w-screen-xl mx-auto flex gap-10 pt-10 pb-14">
                 <div className="w-2/3">
                     <div className="bg-[#032055] p-5 rounded-lg mb-8">
                         <div>
@@ -189,6 +190,7 @@ const Checkout = () => {
                     </div>
                 </div>
             </div>
+            <Footer></Footer>
         </div>
     );
 };

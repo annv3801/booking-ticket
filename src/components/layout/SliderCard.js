@@ -16,7 +16,7 @@ const SliderCard = () => {
 
     useEffect(() => {
         axios
-            .get("https://localhost:7228/DMP/Film")
+            .get("http://localhost:5233/view-list-film")
             .then((res) => {
                 const filmResponse = res.data.data.result;
                 setFilm(filmResponse);
@@ -25,7 +25,7 @@ const SliderCard = () => {
 
     useEffect(() => {
         axios
-            .get("https://localhost:7228/DMP/Category")
+            .get("http://localhost:5233/view-list-category")
             .then((res) => {
                 const categoryResponse = res.data.data.result;
                 setCategory(categoryResponse);
@@ -72,7 +72,7 @@ const SliderCard = () => {
     };
 
     return (
-        <div className="bg-[#001539]">
+        <div className="bg-[#001539] pb-14">
             <div className="max-w-screen-xl py-10 mx-auto">
                 <ul className="flex flex-wrap text-sm font-medium text-center text-white dark:text-gray-400 ">
                     <li className="mr-2">
@@ -95,7 +95,7 @@ const SliderCard = () => {
                                 <a href="#">
                                     <img
                                         className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
-                                        src={`https://localhost:7228/resources/${seat.image}`}
+                                        src={`https://localhost:5233/resources/${seat.image}`}
                                         alt=""
                                     />
                                 </a>

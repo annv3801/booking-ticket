@@ -13,15 +13,15 @@ const SignInPage = () => {
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
-            userName: "",
+            phoneNumber: "",
             password: ""
         },
         validationSchema: Yup.object({
-            userName: Yup.string().required("Bắt buộc phải nhập user name. Vui lòng thử lại"),
+            phoneNumber: Yup.string().required("Bắt buộc phải nhập số điện thoại. Vui lòng thử lại"),
             password: Yup.string().required("Bạn vui lòng nhập vào Password").min(6, "Vui lòng nhập ít nhất 6 kí tự").max(50, "Hệ thống hiện tại chỉ cho nhập max 50 ký tự").matches(/^(\S+$)/g, 'Bạn không thể nhập khoảng trắng')
         }),
         onSubmit: (values) => {
-            axios.post("https://localhost:7228/Identity/Account/SignInWithUserName", values)
+            axios.post("http://localhost:5233/Identity/Account/SignInWithPhoneNumber", values)
                 .then(res => {
                     if (res.data.status === 200) {
                         navigate("/");
@@ -47,16 +47,16 @@ const SignInPage = () => {
                             className="w-full h-full block mx-auto my-0 md:h-[52px] md:w-[120px] md:object-cover"/>
                     </NavLink>
                     <Field>
-                        <Label htmlFor="userName">Username</Label>
+                        <Label htmlFor="phoneNumber">Số điện thoại</Label>
                         <Input
                             type="text"
-                            name="userName"
-                            placeholder="Enter your userName"
+                            name="phoneNumber"
+                            placeholder="Enter your số điện thoại"
                             onChange={formik.handleChange}
-                            value = {formik.values.userName}
+                            value = {formik.values.phoneNumber}
                         ></Input>
-                        {formik.errors.userName && (
-                            <p className='text-red-500'>{formik.errors.userName}</p>
+                        {formik.errors.phoneNumber && (
+                            <p className='text-red-500'>{formik.errors.phoneNumber}</p>
                         )}
                     </Field>
 
@@ -80,7 +80,7 @@ const SignInPage = () => {
                         </NavLink>
                     </div>
                     <div className="text-red-500 mb-5">{showError}</div>
-                    {formik.errors.userName == null && formik.errors.password == null ?
+                    {formik.errors.phoneNumber == null && formik.errors.password == null ?
                         (<Button type="submit" className="w-full" >
                             Sign In
                         </Button>)

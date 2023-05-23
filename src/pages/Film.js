@@ -4,10 +4,11 @@ import {NavLink, useParams} from 'react-router-dom';
 import { fetcher, link } from '../config';
 import Header from '../components/layout/Header';
 import axios from 'axios';
+import Footer from "../components/layout/Footer";
 
 const HomePage = () => {
     const { slug } = useParams();
-    const { data } = useSWR(`${link}/DMP/Film-By-ShortenUrl/${slug}`, fetcher);
+    const { data } = useSWR(`http://localhost:5233/view-film-by-shorten-url/${slug}`, fetcher);
     const [showPopup, setShowPopup] = useState(false);
     const [schedule, setSchedule] = useState([]);
     const currentDate = new Date();
@@ -29,7 +30,7 @@ const HomePage = () => {
     };
     useEffect(() => {
         axios
-            .get(`${link}/DMP/FilmSchedulesByFilmId`, {
+            .get(`http://localhost:5233/view-list-schedule-by-time`, {
                 params: {
                     Date: dateString,
                     FilmId: data?.data.id
@@ -144,6 +145,7 @@ const HomePage = () => {
                     </div>
                 </div>
             }
+            <Footer></Footer>
         </div>
     );
 };

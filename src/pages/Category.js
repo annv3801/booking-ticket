@@ -3,6 +3,7 @@ import {NavLink, useParams} from 'react-router-dom';
 import { fetcher, link } from '../config';
 import Header from '../components/layout/Header';
 import axios from 'axios';
+import Footer from "../components/layout/Footer";
 
 const Category = () => {
     const { slug } = useParams();
@@ -16,7 +17,7 @@ const Category = () => {
     };
 
     useEffect(() => {
-        axios.get(`https://localhost:7228/DMP/FilmByCategory`, {
+        axios.get(`http://localhost:5233/view-list-film-by-category`, {
             params: {
                 CategorySlug: slug,
             },
@@ -46,7 +47,7 @@ const Category = () => {
     };
     useEffect(() => {
         axios
-            .get(`${link}/DMP/FilmSchedulesByFilmId`, {
+            .get(`http://localhost:5233/view-list-schedule-by-time`, {
                 params: {
                     Date: dateString,
                     FilmId: filmId
@@ -131,6 +132,7 @@ const Category = () => {
                     </div>
                 }
             </div>
+            <Footer></Footer>
         </div>
     );
 };

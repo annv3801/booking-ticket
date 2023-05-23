@@ -40,7 +40,7 @@ const PaymentSuccess = () => {
         discount: couponValue,
         total: totalAmount - couponValue
     };
-    axios.post("https://localhost:7228/DMP/Booking", data, config)
+    axios.post("http://localhost:5233/booking", data, config)
         .then(res => {
             navigate("/");
         });

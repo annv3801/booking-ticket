@@ -68,15 +68,10 @@ const HomePage = () => {
             <div className="bg-[#001539]">
                 <div className=" max-w-screen-xl py-5 mx-auto">
                     <h2 className="text-white text-3xl font-bold border-b-2 pb-2">Nội dung phim</h2>
-                    <iframe width="1280" height="720" src="https://www.youtube.com/embed/IiMinixSXII"
-                            title="Dungeons &amp; Dragons: Honor Among Thieves | Official Trailer (2023 Movie)"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            allowFullScreen></iframe>
                     <div className="text-white pt-5 flex gap-5">
                         <img
                             className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
-                            src={`https://localhost:7228/resources/${data?.data.image}`}
+                            src={`http://localhost:5233/resources/${data?.data.image}`}
                             alt=""
                         />
                         <div className="w-full">
@@ -108,6 +103,8 @@ const HomePage = () => {
                             <button className="mt-3 p-3 bg-green-400 rounded-lg font-bold" onClick={() => setShowPopup(true)}>Mua Ngay</button>
                         </div>
                     </div>
+                    <div dangerouslySetInnerHTML={{ __html: data?.data.trailer }} className="mt-10"></div>
+
                 </div>
             </div>
             {showPopup &&

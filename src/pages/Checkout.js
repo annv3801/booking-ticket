@@ -174,20 +174,24 @@ const Checkout = () => {
                         <div className="font-bold text-xl">Tổng tiền:</div>
                         <div className="items-center text-center text-xl font-bold">{parseInt(totalAmount - couponValue).toLocaleString()}đ</div>
                     </div>
-                    <div className="pt-5 pb-2">
                         {paymentOption === '1' ? (
-                            <button
-                                className="text-center p-3 bg-red-500 rounded-lg text-lg"
-                                disabled={submitting}
-                                onClick={handleSubmit}
-                            >
-                                Tiếp tục
-                            </button>
-                        ) : (
-                            <a href={paymentUrl} className="text-center p-3 bg-red-500 rounded-lg text-lg">Tiếp tục</a>
-                        )}
+                            <div className="pt-[40px] pb-[20px]">
+                                <a
+                                    href="# "
+                                    className="text-center p-3 bg-red-500 rounded-lg text-lg"
+                                    disabled={submitting}
+                                    onClick={handleSubmit}
+                                >
+                                    Tiếp tục
+                                </a>
+                            </div>
 
-                    </div>
+                        ) : (
+                            <div className="pt-[40px] pb-[20px]">
+                                <a href={paymentUrl} className="text-center p-3 bg-red-500 rounded-lg text-lg">Tiếp tục</a>
+                            </div>
+
+                        )}
                 </div>
             </div>
             <Footer></Footer>

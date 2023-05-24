@@ -6,7 +6,7 @@ const Slider = () => {
 
     useEffect(() => {
         axios
-            .get("https://localhost:7228/DMP/SliderList")
+            .get("http://localhost:5233/view-list-slider")
             .then((res) => {
                 const listSlider = res.data?.data.result;
                 setSlider(listSlider);
@@ -28,7 +28,7 @@ const Slider = () => {
                     {slider.map((image, index) => (
                         <img
                             key={index}
-                            src={`https://localhost:7228/resources/${image.image}`}
+                            src={`http://localhost:5233/resources/${image.image}`}
                             alt={image.alt}
                             className={`absolute top-0 left-0 w-full h-full transition-opacity duration-500 ease-in-out ${
                                 currentIndex === index ? 'opacity-100' : 'opacity-0'

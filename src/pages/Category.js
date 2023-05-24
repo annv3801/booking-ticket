@@ -82,10 +82,10 @@ const Category = () => {
         <div>
             <Header></Header>
             <div className="bg-[#001539]">
-                <div className="flex flex-wrap max-w-screen-xl py-5 mx-auto gap-5">
+                <div className="flex flex-wrap max-w-screen-xl py-5 mx-auto">
                     {category.map((item) => (
-                        <div className="w-1/4 bg-white rounded-lg shadow-md ">
-                            <img className="rounded-t-lg" src={`https://localhost:7228/resources/${item.image}`} alt=""/>
+                        <div className="w-[300px] bg-white rounded-lg shadow-md mx-2 my-2">
+                            <img className="rounded-t-lg" src={`http://localhost:5233/resources/${item.image}`} alt=""/>
                             <div className="p-4">
                                 <NavLink to={`/film/${item.shortenUrl}`} className="mb-5">{item.name}</NavLink>
                                 <div className="flex">

@@ -66,8 +66,11 @@ const Header = () => {
                             />
                         </button>
                         {isOpen && (
-                            <div className="w-[100px] z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 absolute top-6" id="user-dropdown">
+                            <div className="w-[150px] z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 absolute top-6" id="user-dropdown">
                                 <ul className="py-2" aria-labelledby="user-menu-button">
+                                    <li>
+                                        <NavLink to={"/booking-ticket-history"} className="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Lịch sử đặt vé</NavLink>
+                                    </li>
                                     <li>
                                         <div className="cursor-pointer block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white" onClick={signOutClick}>
                                             Đăng xuất

@@ -39,7 +39,7 @@ const Checkout = () => {
             name: "string"
         }
         if(event.target.value === '2') {
-            axios.post("http://localhost:5233/payment-vnpay", data, config)
+            axios.post("https://cinema.dummywebsite.me/payment-vnpay", data, config)
                 .then(res => {
                     setPaymentUrl(res.data)
                 });
@@ -63,7 +63,7 @@ const Checkout = () => {
             discount: couponValue,
             total: totalAmount - couponValue
         };
-        axios.post("http://localhost:5233/booking", data, config)
+        axios.post("https://cinema.dummywebsite.me/booking", data, config)
             .then(res => {
                 navigate("/");
             })
@@ -77,7 +77,7 @@ const Checkout = () => {
 
         setSubmitting(true); // Disable submit button
 
-        axios.get(`http://localhost:5233/view-coupon-by-code/${couponCode}`, config)
+        axios.get(`https://cinema.dummywebsite.me/view-coupon-by-code/${couponCode}`, config)
             .then(res => {
                 if (res.status === 202) {
                     setCouponValue(0);

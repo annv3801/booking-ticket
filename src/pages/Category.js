@@ -17,7 +17,7 @@ const Category = () => {
     };
 
     useEffect(() => {
-        axios.get(`http://localhost:5233/view-list-film-by-category`, {
+        axios.get(`https://cinema.dummywebsite.me/view-list-film-by-category`, {
             params: {
                 CategorySlug: slug,
             },
@@ -47,7 +47,7 @@ const Category = () => {
     };
     useEffect(() => {
         axios
-            .get(`http://localhost:5233/view-list-schedule-by-time`, {
+            .get(`https://cinema.dummywebsite.me/view-list-schedule-by-time`, {
                 params: {
                     Date: dateString,
                     FilmId: filmId
@@ -85,7 +85,7 @@ const Category = () => {
                 <div className="flex flex-wrap max-w-screen-xl py-5 mx-auto">
                     {category.map((item) => (
                         <div className="w-[300px] bg-white rounded-lg shadow-md mx-2 my-2">
-                            <img className="rounded-t-lg" src={`http://localhost:5233/resources/${item.image}`} alt=""/>
+                            <img className="rounded-t-lg" src={`https://cinema.dummywebsite.me/resources/${item.image}`} alt=""/>
                             <div className="p-4">
                                 <NavLink to={`/film/${item.shortenUrl}`} className="mb-5">{item.name}</NavLink>
                                 <div className="flex">

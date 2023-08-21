@@ -19,7 +19,7 @@ const BookingTicketHistory = () => {
         }
     };
     const res = () => {
-        axios.get("http://localhost:5233/view-list-booking-by-user", config)
+        axios.get("https://cinema.dummywebsite.me/view-list-booking-by-user", config)
             .then(res => {
                 const listBooking = res.data;
                 setBooking(listBooking)

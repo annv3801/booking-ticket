@@ -4,7 +4,7 @@ import {NavLink, useNavigate, useParams} from "react-router-dom";
 import Header from "../components/layout/Header";
 import Footer from "../components/layout/Footer";
 
-const Seat = ({ seat, onSeatSelect, selectedSeats, className }) => {
+const Seat = ({ seat, onSeatSelect, selectedSeats, className, style }) => {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
     useEffect(() => {
@@ -33,7 +33,7 @@ const Seat = ({ seat, onSeatSelect, selectedSeats, className }) => {
     }
 
     return (
-        <button className={`w-10 h-10 rounded-full ${seatClass} ${className}`} onClick={handleClick}>
+        <button className={`w-10 h-10 rounded-full ${seatClass} ${className}`} style={style} onClick={handleClick}>
             {isSeatSelected ? `${seat.name}` : seat.name}
         </button>
     );
@@ -48,7 +48,7 @@ const SeatMap = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:5233/view-list-ticket")
+            .get("https://cinema.dummywebsite.me/view-list-ticket")
             .then((res) => {
                 const listTicket = res.data.data.result;
                 setTickets(listTicket);
@@ -58,7 +58,7 @@ const SeatMap = () => {
     // Get list of seats
     useEffect(() => {
         axios
-            .get("http://localhost:5233/view-list-seat-by-schedule", {
+            .get("https://cinema.dummywebsite.me/view-list-seat-by-schedule", {
                 params: {
                     ScheduleId: id,
                 },
@@ -130,9 +130,9 @@ const SeatMap = () => {
         return parseInt(aNameParts.slice(1).join('')) - parseInt(bNameParts.slice(1).join(''));
     });
     const seatColors = {
-        1: "bg-green-300",
-        2: "bg-orange-500",
-        3: "bg-pink-500"
+        1: {backgroundColor: "#62b4ff", color: "white"},
+        2: {backgroundColor: "#eb4e53", color: "white"},
+        3: {backgroundColor: "#b807d9", color: "white"}
     };
     const handleClick = () => {
         localStorage.setItem('selectedSeats', JSON.stringify(selectedSeats));
@@ -165,6 +165,7 @@ const SeatMap = () => {
                                 {groupSeats.map(seat => {
                                     return (
                                         <Seat
+                                            style={seatColors[seat.type]}
                                             className={seatColors[seat.type]}
                                             key={seat.id}
                                             seat={seat}
@@ -178,6 +179,20 @@ const SeatMap = () => {
                     </>
                 ))}
 
+            </div>
+            <div className="flex gap-10 max-w-screen-sm mx-auto my-10 justify-center">
+                <div className="flex gap-3">
+                    <div className="text-center items-center">Ghế thường</div>
+                    <div style={{backgroundColor: "#62b4ff"}} className="rounded-full w-10 h-10"></div>
+                </div>
+                <div className="flex gap-3">
+                    <div className="text-center items-center">Ghế vip</div>
+                    <div style={{backgroundColor: "#eb4e53"}} className="rounded-full w-10 h-10"></div>
+                </div>
+                <div className="flex gap-3">
+                    <div className="text-center items-center">Ghế tình nhân</div>
+                    <div style={{backgroundColor: "#b807d9"}} className="rounded-full w-10 h-10"></div>
+                </div>
             </div>
             <div className="max-w-screen-xl mx-auto mt-5 pb-14">
                 <div className="mt-4 flex bg-blue-500 rounded-lg p-5 text-center items-center">

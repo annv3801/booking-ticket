@@ -21,7 +21,7 @@ const SignInPage = () => {
             password: Yup.string().required("Bạn vui lòng nhập vào Password").min(6, "Vui lòng nhập ít nhất 6 kí tự").max(50, "Hệ thống hiện tại chỉ cho nhập max 50 ký tự").matches(/^(\S+$)/g, 'Bạn không thể nhập khoảng trắng')
         }),
         onSubmit: (values) => {
-            axios.post("http://localhost:5233/Identity/Account/SignInWithPhoneNumber", values)
+            axios.post("https://cinema.dummywebsite.me/Identity/Account/SignInWithPhoneNumber", values)
                 .then(res => {
                     if (res.data.status === 200) {
                         navigate("/");

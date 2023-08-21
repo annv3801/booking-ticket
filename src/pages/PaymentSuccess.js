@@ -40,7 +40,7 @@ const PaymentSuccess = () => {
         discount: couponValue,
         total: totalAmount - couponValue
     };
-    axios.post("http://localhost:5233/booking", data, config)
+    axios.post("https://cinema.dummywebsite.me/booking", data, config)
         .then(res => {
         });
 

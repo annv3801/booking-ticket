@@ -16,7 +16,7 @@ const Header = () => {
     }, []);
 
     const res = () => {
-        axios.get("http://localhost:5233/view-list-category", {
+        axios.get("https://cinema.dummywebsite.me/view-list-category", {
             params: {
                 OrderBy: "Name",
                 OrderByDesc: false

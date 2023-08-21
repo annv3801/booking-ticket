@@ -8,7 +8,7 @@ import Footer from "../components/layout/Footer";
 
 const HomePage = () => {
     const { slug } = useParams();
-    const { data } = useSWR(`http://localhost:5233/view-film-by-shorten-url/${slug}`, fetcher);
+    const { data } = useSWR(`https://cinema.dummywebsite.me/view-film-by-shorten-url/${slug}`, fetcher);
     const [showPopup, setShowPopup] = useState(false);
     const [schedule, setSchedule] = useState([]);
     const currentDate = new Date();
@@ -30,7 +30,7 @@ const HomePage = () => {
     };
     useEffect(() => {
         axios
-            .get(`http://localhost:5233/view-list-schedule-by-time`, {
+            .get(`https://cinema.dummywebsite.me/view-list-schedule-by-time`, {
                 params: {
                     Date: dateString,
                     FilmId: data?.data.id
@@ -71,7 +71,7 @@ const HomePage = () => {
                     <div className="text-white pt-5 flex gap-5">
                         <img
                             className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
-                            src={`http://localhost:5233/resources/${data?.data.image}`}
+                            src={`https://cinema.dummywebsite.me/resources/${data?.data.image}`}
                             alt=""
                         />
                         <div className="w-full">
@@ -128,13 +128,28 @@ const HomePage = () => {
                                     </div>
                                 ))}
                             </div>
-                            {schedule.map(schedules => (
+                            {schedule.map((schedules) => (
                                 <div className="mt-5 border-b-2 pb-5">
                                     <div className="text-xl">{schedules.theaterName}</div>
                                     <div className="flex gap-5 mt-3">
-                                        {schedules?.listSchedule.sort((a, b) => new Date(a.startTime) - new Date(b.startTime)).map(item => (
-                                            <NavLink to={`/seats/${item.id}`} key={item.id} className="py-2 px-5 border-2 rounded-lg border-gray-300 hover:border-gray-600">{new Date(item.startTime).toLocaleTimeString('en-GB', {hour12: false,})}</NavLink>
-                                        ))}
+                                        {schedules?.listSchedule
+                                            .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
+                                            .map((item) => {
+                                                const startTime = new Date(item.startTime);
+                                                if (startTime < new Date()) {
+                                                    return null; // Skip rendering if startTime is in the past
+                                                }
+
+                                                return (
+                                                    <NavLink
+                                                        to={`/seats/${item.id}`}
+                                                        key={item.id}
+                                                        className="py-2 px-5 border-2 rounded-lg border-gray-300 hover:border-gray-600"
+                                                    >
+                                                        {startTime.toLocaleTimeString("en-GB", { hour12: false })}
+                                                    </NavLink>
+                                                );
+                                            })}
                                     </div>
                                 </div>
                             ))}

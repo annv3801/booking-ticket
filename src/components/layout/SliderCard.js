@@ -17,7 +17,7 @@ const SliderCard = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:5233/view-list-film")
+            .get("https://cinema.dummywebsite.me/view-list-film")
             .then((res) => {
                 const filmResponse = res.data.data.result;
                 setFilm(filmResponse);
@@ -26,7 +26,7 @@ const SliderCard = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:5233/view-list-category")
+            .get("https://cinema.dummywebsite.me/view-list-category")
             .then((res) => {
                 const categoryResponse = res.data.data.result;
                 setCategory(categoryResponse);
@@ -35,7 +35,7 @@ const SliderCard = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:5233/view-list-news")
+            .get("https://cinema.dummywebsite.me/view-list-news")
             .then((res) => {
                 const categoryResponse = res.data.data.result;
                 setNews(categoryResponse);
@@ -106,7 +106,7 @@ const SliderCard = () => {
                                 <a href="#">
                                     <img
                                         className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
-                                        src={`http://localhost:5233/resources/${seat.image}`}
+                                        src={`https://cinema.dummywebsite.me/resources/${seat.image}`}
                                         alt=""
                                     />
                                 </a>
@@ -135,7 +135,7 @@ const SliderCard = () => {
                                     <a href="#">
                                         <img
                                             className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
-                                            src={`http://localhost:5233/resources/${seat.image}`}
+                                            src={`https://cinema.dummywebsite.me/resources/${seat.image}`}
                                             alt=""
                                         />
                                     </a>
@@ -164,7 +164,7 @@ const SliderCard = () => {
                             <a href="#">
                                 <img
                                     className="rounded-t-lg object-cover w-full h-full"
-                                    src={`http://localhost:5233/resources/${seat.image}`}
+                                    src={`https://cinema.dummywebsite.me/resources/${seat.image}`}
                                     alt=""
                                 />
                             </a>

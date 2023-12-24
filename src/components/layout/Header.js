@@ -16,17 +16,21 @@ const Header = () => {
     }, []);
 
     const res = () => {
-        axios.get("https://cinema.dummywebsite.me/view-list-category", {
-            params: {
-                OrderBy: "Name",
-                OrderByDesc: false
-            }
+        axios.post("https://cinema.dummywebsite.me/Group/View-List-Groups?type=FILM", {
+          pageSize: 10,
+          currentPage: 1,
+          searchByFields: [],
+          sortByFields: []
         })
-        .then(res => {
-            const listCategory = res.data;
-            setCategory(listCategory)
+        .then(response => {
+          const listCategory = response.data;
+          setCategory(listCategory);
         })
-    };
+        .catch(error => {
+          console.error("Error fetching data:", error);
+        });
+      };
+      
     useEffect(() => res(), []);
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -36,7 +40,6 @@ const Header = () => {
         localStorage.removeItem('token');
         window.location.reload();
     }
-
     return (
         <nav className="bg-[#0a1e5e] border-gray-200 dark:bg-gray-900 ">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -101,12 +104,12 @@ const Header = () => {
                 <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
                      id="mobile-menu-2">
                     <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-[#0a1e5e] dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-                        {category.data?.result?.map((categories) => {
+                        {category.data?.data?.map((categories) => {
                             return (
                                 <li>
-                                    <NavLink to={`/category/${categories.shortenUrl}`}
+                                    <NavLink to={`/category/${categories.id}`}
                                        className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-white md:p-0 md:dark:text-blue-500 capitalize "
-                                       aria-current="page">{categories.name}</NavLink>
+                                       aria-current="page">{categories.title}</NavLink>
                                 </li>
                             );
                         })}

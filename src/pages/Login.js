@@ -21,14 +21,16 @@ const SignInPage = () => {
             password: Yup.string().required("Bạn vui lòng nhập vào Password").min(6, "Vui lòng nhập ít nhất 6 kí tự").max(50, "Hệ thống hiện tại chỉ cho nhập max 50 ký tự").matches(/^(\S+$)/g, 'Bạn không thể nhập khoảng trắng')
         }),
         onSubmit: (values) => {
-            axios.post("https://cinema.dummywebsite.me/Identity/Account/SignInWithPhoneNumber", values)
+            axios.post("https://cinema.dummywebsite.me/Account/Sign-In", values)
                 .then(res => {
-                    if (res.data.status === 200) {
+                    if (res.status) {
+                        console.log("login ok")
                         navigate("/");
-                        localStorage.setItem("token", res.data.data.token);
+                        console.log(res.data)
+                        localStorage.setItem("token", res.data.data.accessToken);
                     }
                     else {
-                        setShowError(res.data.errors[0].error)
+                        setShowError(res.data.message)
                     }
                 })
                 .catch(err => {

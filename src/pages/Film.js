@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import {NavLink, useParams} from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { fetcher, link } from '../config';
 import Header from '../components/layout/Header';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import Footer from "../components/layout/Footer";
 
 const HomePage = () => {
     const { slug } = useParams();
-    const { data } = useSWR(`https://cinema.dummywebsite.me/view-film-by-shorten-url/${slug}`, fetcher);
+    const { data } = useSWR(`https://cinema.dummywebsite.me/Film/View-Film/${slug}`, fetcher);
     const [showPopup, setShowPopup] = useState(false);
     const [schedule, setSchedule] = useState([]);
     const currentDate = new Date();
@@ -21,19 +21,20 @@ const HomePage = () => {
     });
     const formattedDate = formatter.format(currentDate);
     const [dateString, setDateString] = useState(formattedDate);
-    const [selectedDate, setSelectedDate] = useState(formattedDate.substring(8, 10));
+    const [selectedDate, setSelectedDate] = useState(currentDate.getDate().toString()); // Use getDate() to get the day of the month
+
     const handleDateClick = (date, month) => {
         setSelectedDate(date);
         const year = new Date().getFullYear(); // get current year
         const newDateString = `${year}-${month}-${date}`;
         setDateString(newDateString);
     };
+
     useEffect(() => {
         axios
-            .get(`https://cinema.dummywebsite.me/view-list-schedule-by-time`, {
+            .get(`https://cinema.dummywebsite.me/Scheduler/View-List-Schedulers-By-Film/${slug}`, {
                 params: {
                     Date: dateString,
-                    FilmId: data?.data.id
                 },
             })
             .then((res) => {
@@ -109,13 +110,13 @@ const HomePage = () => {
             </div>
             {showPopup &&
                 <div>
-                    <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-50 flex justify-center items-center" style={{position: 'fixed'}} onClick={() => setShowPopup(false)}>
+                    <div className="fixed top-0 left-0 w-full h-full bg-gray-500 bg-opacity-50 flex justify-center items-center" style={{ position: 'fixed' }} onClick={() => setShowPopup(false)}>
                         <div className="w-[calc(100%-60px)] h-[calc(100%-60px)] bg-white p-8 rounded-lg" onClick={(e) => e.stopPropagation()}>
                             <div className="flex flex-wrap gap-5 border-b-2 pb-5 border-black">
                                 {dates.map((item) => (
                                     <div
                                         key={item.day}
-                                        className={`p-3 bg-[#fdfcf0] rounded-lg w-[104px] items-center cursor-pointer ${ selectedDate === item.day ? 'border-2 border-black' : '' }`}
+                                        className={`p-3 bg-[#fdfcf0] rounded-lg w-[104px] items-center cursor-pointer ${selectedDate === item.day ? 'border-2 border-black' : ''}`}
                                         onClick={() => handleDateClick(item.day, item.month)}
                                     >
                                         <div className="flex">
@@ -130,26 +131,35 @@ const HomePage = () => {
                             </div>
                             {schedule.map((schedules) => (
                                 <div className="mt-5 border-b-2 pb-5">
-                                    <div className="text-xl">{schedules.theaterName}</div>
+                                    {schedules?.schedulerFilmResponses.map((item) => (
+                                        item?.schedulerRoomResponse.map((item1) => {
+                                            return (
+                                                <div className="text-xl" key={item1.room.theater.id}>
+                                                    {item1.room.theater.name}
+                                                </div>
+                                            );
+                                        })
+                                    ))}
                                     <div className="flex gap-5 mt-3">
-                                        {schedules?.listSchedule
-                                            .sort((a, b) => new Date(a.startTime) - new Date(b.startTime))
-                                            .map((item) => {
-                                                const startTime = new Date(item.startTime);
-                                                if (startTime < new Date()) {
-                                                    return null; // Skip rendering if startTime is in the past
-                                                }
-
-                                                return (
-                                                    <NavLink
-                                                        to={`/seats/${item.id}`}
-                                                        key={item.id}
-                                                        className="py-2 px-5 border-2 rounded-lg border-gray-300 hover:border-gray-600"
-                                                    >
-                                                        {startTime.toLocaleTimeString("en-GB", { hour12: false })}
-                                                    </NavLink>
-                                                );
-                                            })}
+                                        {schedules?.schedulerFilmResponses.map((item) => (
+                                            item?.schedulerRoomResponse.map((item1) => (
+                                                item1.schedulerTimeResponses.map((item2) => {
+                                                    const startTime = new Date(item2.startTime);
+                                                    if (startTime < new Date()) {
+                                                        return null; // Skip rendering if startTime is in the past
+                                                    }
+                                                    return (
+                                                        <NavLink
+                                                            to={`/seats/${item2.schedulerId}`}
+                                                            key={item2.schedulerId}
+                                                            className="py-2 px-5 border-2 rounded-lg border-gray-300 hover:border-gray-600"
+                                                        >
+                                                            {startTime.toLocaleTimeString("en-GB", { hour12: false })}
+                                                        </NavLink>
+                                                    );
+                                                })
+                                            ))
+                                        ))}
                                     </div>
                                 </div>
                             ))}

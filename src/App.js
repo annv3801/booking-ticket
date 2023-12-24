@@ -7,6 +7,7 @@ import Login from "./pages/Login";
 import Category from "./pages/Category";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import BookingTicketHistory from "./pages/BookingTicketHistory";
+import PaymentFail from "./pages/PaymentFail";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/seats/:id" element={<TicketBooking></TicketBooking>}></Route>
           <Route path="/nextpage" element={<Checkout></Checkout>}></Route>
           <Route path="/payment-success" element={<PaymentSuccess></PaymentSuccess>}></Route>
+          <Route path="/payment-fail" element={<PaymentFail></PaymentFail>}></Route>
           <Route path="/booking-ticket-history" element={<BookingTicketHistory></BookingTicketHistory>}></Route>
       </Routes>
   );

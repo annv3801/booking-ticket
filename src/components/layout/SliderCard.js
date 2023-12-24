@@ -11,40 +11,47 @@ const SliderCard = () => {
         setActiveTab(tabNumber);
     }
 
-    const [film, setFilm] = useState([]);
-    const [category, setCategory] = useState([]);
+    const [filmIsShowing, setFilmIsShowing] = useState([]);
+    const [filmUpComing, setFilmUpComing] = useState([]);
     const [news, setNews] = useState([]);
 
+    
     useEffect(() => {
-        axios
-            .get("https://cinema.dummywebsite.me/view-list-film")
-            .then((res) => {
-                const filmResponse = res.data.data.result;
-                setFilm(filmResponse);
-            })
+        axios.post("https://cinema.dummywebsite.me/Film/View-List-Films-By-Group", {
+            pageSize: 10,
+            currentPage: 1,
+            searchByFields: [],
+            sortByFields: [],
+            groupId: 955602990727168
+          })
+          .then(response => {
+            const listFilm = response.data.data.data;
+            setFilmIsShowing(listFilm);
+          })
     }, []);
-
+    console.log("hi",filmIsShowing)
     useEffect(() => {
-        axios
-            .get("https://cinema.dummywebsite.me/view-list-category")
-            .then((res) => {
-                const categoryResponse = res.data.data.result;
-                setCategory(categoryResponse);
-            })
+        axios.post("https://cinema.dummywebsite.me/Film/View-List-Films-By-Group", {
+            pageSize: 10,
+            currentPage: 1,
+            searchByFields: [],
+            sortByFields: [],
+            groupId: 955603039346688
+          })
+          .then(response => {
+            const listFilm = response.data.data.data;
+            setFilmUpComing(listFilm);
+          })
     }, []);
-
-    useEffect(() => {
-        axios
-            .get("https://cinema.dummywebsite.me/view-list-news")
-            .then((res) => {
-                const categoryResponse = res.data.data.result;
-                setNews(categoryResponse);
-                console.log(categoryResponse)
-            })
-    }, []);
-
-    const categoryMovieNowShowing = category.find(cat => cat.shortenUrl == 'phim-dang-chieu') ;
-    const categoryMovieComingSoon = category.find(cat => cat.shortenUrl == 'phim-sap-chieu') ;
+    // useEffect(() => {
+    //     axios
+    //         .get("https://cinema.dummywebsite.me/view-list-news")
+    //         .then((res) => {
+    //             const categoryResponse = res.data.data.result;
+    //             setNews(categoryResponse);
+    //             console.log(categoryResponse)
+    //         })
+    // }, []);
 
     const settings = {
         infinite: true,
@@ -101,28 +108,29 @@ const SliderCard = () => {
             {activeTab === 1 && (
                 <div className="mx-auto max-w-screen-xl">
                     <Slider {...settings}>
-                        {film.map(seat => seat.categoryId == categoryMovieNowShowing?.id ? (
-                            <NavLink to={`/film/${seat.shortenUrl}`} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mx-auto" key={seat.id}>
+                        {filmIsShowing.map((film) => (
+                            <NavLink to={`/film/${film.id}`} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mx-auto" key={film.id}>
+                            <a href="#">
+                                <img
+                                    className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
+                                    src={`https://cinema.dummywebsite.me/resources/${film.image}`}
+                                    alt=""
+                                />
+                            </a>
+                            <div className="p-5">
                                 <a href="#">
-                                    <img
-                                        className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
-                                        src={`https://cinema.dummywebsite.me/resources/${seat.image}`}
-                                        alt=""
-                                    />
+                                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
+                                        {film.name}
+                                    </h5>
                                 </a>
-                                <div className="p-5">
-                                    <a href="#">
-                                        <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
-                                            {seat.name}
-                                        </h5>
-                                    </a>
-                                    <div className="flex gap-2  w-full justify-center border-t-[1px] pt-2">
-                                        <div>{seat.duration} phút</div> |
-                                        <div>{seat.premiere}</div>
-                                    </div>
+                                <div className="flex gap-2  w-full justify-center border-t-[1px] pt-2">
+                                    <div>{film.duration} phút</div> |
+                                    <div>{film.premiere}</div>
                                 </div>
-                            </NavLink>
-                            ) : ''
+                            </div>
+                        </NavLink>
+                        )
+                            
                         )}
                     </Slider>
                 </div>
@@ -130,34 +138,35 @@ const SliderCard = () => {
             {activeTab === 2 && (
                 <div className="mx-auto max-w-screen-xl">
                     <Slider {...settings}>
-                        {film.map(seat => seat.categoryId == categoryMovieComingSoon.id ? (
-                                <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mx-auto" key={seat.id}>
-                                    <a href="#">
-                                        <img
-                                            className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
-                                            src={`https://cinema.dummywebsite.me/resources/${seat.image}`}
-                                            alt=""
-                                        />
-                                    </a>
-                                    <div className="p-5">
-                                        <a href="#">
-                                            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
-                                                {seat.name}
-                                            </h5>
-                                        </a>
-                                        <div className="flex gap-2  w-full justify-center border-t-[1px] pt-2">
-                                            <div>{seat.duration} phút</div> |
-                                            <div>{seat.premiere}</div>
-                                        </div>
-                                    </div>
+                    {filmUpComing.map((film) => (
+                            <NavLink to={`/film/${film.id}`} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mx-auto" key={film.id}>
+                            <a href="#">
+                                <img
+                                    className="rounded-t-lg object-cover w-[298px] h-[425.55px]"
+                                    src={`https://cinema.dummywebsite.me/resources/${film.image}`}
+                                    alt=""
+                                />
+                            </a>
+                            <div className="p-5">
+                                <a href="#">
+                                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
+                                        {film.name}
+                                    </h5>
+                                </a>
+                                <div className="flex gap-2  w-full justify-center border-t-[1px] pt-2">
+                                    <div>{film.duration} phút</div> |
+                                    <div>{film.premiere}</div>
                                 </div>
-                            ) : ''
+                            </div>
+                        </NavLink>
+                        )
+                            
                         )}
                     </Slider>
                 </div>
             )}
             <div className="text-2xl font-bold my-10 mx-auto max-w-screen-xl text-white border-b-[1px] pb-2">Tin Tức</div>
-            <div className="mx-auto max-w-screen-xl">
+            {/* <div className="mx-auto max-w-screen-xl">
                 <Slider {...settings}>
                     {news.map(seat => (
                         <div className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 mx-auto" key={seat.id}>
@@ -172,7 +181,7 @@ const SliderCard = () => {
                         )
                     )}
                 </Slider>
-            </div>
+            </div> */}
         </div>
     );
 };

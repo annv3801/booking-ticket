@@ -36,11 +36,17 @@ const PaymentSuccess = () => {
         scheduleId: selectedSeats[0].scheduleId,
         totalBeforeDiscount: totalAmount,
         paymentMethod: paymentOption,
-        couponId: coupon != "" ? coupon.id : "",
+        couponId: coupon != "" ? coupon.id : 0,
         discount: couponValue,
-        total: totalAmount - couponValue
+        total: totalAmount - couponValue,
+        foods: [
+            {
+                foodId: 0,
+                quantity: 0
+            }
+        ]
     };
-    axios.post("https://cinema.dummywebsite.me/booking", data, config)
+    axios.post("https://cinema.dummywebsite.me/booking/create-booking", data, config)
         .then(res => {
         });
 

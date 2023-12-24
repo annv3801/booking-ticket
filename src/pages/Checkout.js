@@ -39,7 +39,7 @@ const Checkout = () => {
             name: "string"
         }
         if(event.target.value === '2') {
-            axios.post("https://cinema.dummywebsite.me/payment-vnpay", data, config)
+            axios.post("https://cinema.dummywebsite.me/Booking/payment-vnpay", data, config)
                 .then(res => {
                     setPaymentUrl(res.data)
                 });
@@ -56,14 +56,19 @@ const Checkout = () => {
         setSubmitting(true); // Disable submit button
         const data = {
             seatId: seatId,
-            scheduleId: selectedSeats[0].scheduleId,
-            totalBeforeDiscount: totalAmount,
+            totalBeforeDiscount: parseFloat(totalAmount),
             paymentMethod: paymentOption,
-            couponId: coupon != "" ? coupon.id : "",
+            couponId: 0,
             discount: couponValue,
-            total: totalAmount - couponValue
+            total: parseFloat(totalAmount) - couponValue,
+            foods:[
+                {
+                  "foodId": 0,
+                  "quantity": 0
+                }
+              ]
         };
-        axios.post("https://cinema.dummywebsite.me/booking", data, config)
+        axios.post("https://cinema.dummywebsite.me/booking/create-booking", data, config)
             .then(res => {
                 navigate("/");
             })
@@ -93,6 +98,7 @@ const Checkout = () => {
                 setSubmitting(false); // Re-enable submit button
             });
     }
+    console.log(selectedSeats)
     return (
         <div className="bg-[#001232] text-white">
             <Header></Header>
@@ -152,7 +158,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex gap-2 py-2">
                         <div className="font-bold text-lg">Suất chiếu:</div>
-                        <div className="items-center text-center text-lg">{new Date(startTime).toLocaleDateString('en-GB')} {new Date(startTime).toLocaleTimeString('en-GB', {hour12: false,})}</div>
+                        <div className="items-center text-center text-lg">{new Date(selectedSeats[0]?.scheduler.startTime).toLocaleDateString('en-GB')} {new Date(selectedSeats[0]?.scheduler.startTime).toLocaleTimeString('en-GB', {hour12: false,})}</div>
                     </div>
                     <div className="flex gap-2 py-2">
                         <div className="font-bold text-lg">Phòng chiếu:</div>
@@ -160,7 +166,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex gap-2 pt-2 pb-5 border-b-[1px] border-dashed pb-3 border-[#11326f]">
                         <div className="font-bold text-lg">Ghế:</div>
-                        <div className="items-center text-center text-lg">{selectedSeats.map((seat) => seat.name).sort().join(", ")}</div>
+                        <div className="items-center text-center text-lg">{selectedSeats.map((seat) => seat.roomSeat.name).sort().join(", ")}</div>
                     </div>
                     <div className="flex gap-2 pb-2 pt-5 justify-between ">
                         <div className="text-xl">Tổng tiền vé:</div>

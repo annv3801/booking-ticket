@@ -5,12 +5,16 @@ const Slider = () => {
     const [slider, setSlider] = useState([]);
 
     useEffect(() => {
-        axios
-            .get("https://cinema.dummywebsite.me/view-list-slider")
-            .then((res) => {
-                const listSlider = res.data?.data.result;
-                setSlider(listSlider);
-            })
+        axios.post("https://cinema.dummywebsite.me/Slide/View-List-Slides", {
+            pageSize: 5,
+            currentPage: 1,
+            searchByFields: [],
+            sortByFields: []
+          })
+          .then(response => {
+            const listFilm = response.data.data.data;
+            setSlider(listFilm);
+          })
     }, []);
     const [currentIndex, setCurrentIndex] = useState(0);
 
